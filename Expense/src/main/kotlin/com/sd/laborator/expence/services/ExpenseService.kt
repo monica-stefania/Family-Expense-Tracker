@@ -1,19 +1,18 @@
 package com.sd.laborator.expence.services
 
-import com.sd.laborator.expence.interfaces.ExpenceRespository
+import com.sd.laborator.expence.interfaces.ExpenseRespository
 import com.sd.laborator.expence.interfaces.InterfaceService
 import com.sd.laborator.expence.pojo.Expense
 import com.sd.laborator.expence.pojo.ExpenseRequest
 import com.sd.laborator.expence.pojo.ExpenseResponse
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 
 @Service
 class ExpenseService: InterfaceService {
 
     @Autowired
-    private lateinit var expenseRepository: ExpenceRespository
+    private lateinit var expenseRepository: ExpenseRespository
 
     override fun addExpense(request: ExpenseRequest): ExpenseResponse {
        if(request.amount <= 0)
@@ -26,6 +25,7 @@ class ExpenseService: InterfaceService {
             memberId    = request.memberId,
             amount      = request.amount,
             category    = request.category,
+            description = request.description,
             date        = request.date
         )
 
@@ -53,8 +53,17 @@ class ExpenseService: InterfaceService {
             return ExpenseResponse(false, "Expense with id=$id not found!")
         expense.amount = request.amount
         expense.category = request.category
+        expense.description = request.description
         expense.date = request.date
         expenseRepository.save(expense)
         return ExpenseResponse(true, "Expense with id=$id was updated!", expense)
+    }
+
+    override fun getExpensesByMemberId(memberId: Long): ExpenseResponse {
+        val list = expenseRepository.findByMemberId(memberId)
+        if (list.isEmpty()) {
+            return ExpenseResponse(false, "Nu exista cheltuieli pentru membrul $memberId.")
+        }
+        return ExpenseResponse(true, "Lista cheltuielilor.", expenses = list)
     }
 }

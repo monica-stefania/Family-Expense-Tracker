@@ -1,7 +1,7 @@
 package com.sd.laborator.expence.pojo
 
 data class ExpenseResponse(
-    var succes: Boolean,
+    var success: Boolean,
     var message: String,
     var expense: Expense? = null,
     var expenses: List<Expense>? = null,

@@ -21,6 +21,9 @@ data class Expense(
     var category: String = "",
 
     @Column(nullable = false)
+    var description: String = "",
+
+    @Column(nullable = false)
     var amount: Double = 0.0,
 
     @Column(nullable = false)
